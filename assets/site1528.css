@@ -1,0 +1,152 @@
+/* ── Tripo Saints · destination pages ──
+   The stylesheet for the destinations hub and the forty guide pages; index.php is the
+   illustrated journey and loads journey.css instead. Every value is a token.
+   This file began as the cinematic homepage — a fixed 3D stage, acts, beats, and an
+   illustrated India band. That homepage is retired and its rules are gone; what remains is
+   the reading page: site chrome, the photographic hero, chapters, and the reveal-on-scroll
+   that scene.js still drives. */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f-text);background:var(--c-stage);color:var(--c-ink);
+     font-size:var(--fs-body);line-height:var(--lh-text);overflow-x:hidden;}
+img{max-width:100%;display:block;}
+a{color:inherit;}
+:focus-visible{outline:none;box-shadow:var(--focus-ring);border-radius:var(--r-s);}
+.skip{position:absolute;left:-9999px;top:0;background:var(--c-ink);color:var(--c-stage);
+      padding:var(--sp-1) var(--sp-2);z-index:300;border-radius:0 0 var(--r-s) 0;font-weight:700;}
+.skip:focus{left:0;}
+.wrap{max-width:var(--page-max);margin:0 auto;padding:0 var(--page-pad);}
+/* Solid paper, not the fade journey.css uses. The header is FIXED, so on a destination page
+   its ground changes as you scroll — photograph at the top, paper a moment later. A gradient
+   that fades to transparent leaves the logo sitting on whatever happens to be behind it, and
+   across forty arbitrary photographs that is sometimes a dark sky. One opaque treatment is
+   the only one that is legible on all of them, and it keeps the chrome identical everywhere. */
+.hd{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--c-stage);}
+/* Deliberately mirrors .jhd-in in journey.css (1280 / 14px 24px) so the logo lands in the
+   same spot on the journey page, the destinations hub and every destination page — the header
+   is site chrome and must not jump when you move between them.
+   The element is class="wrap hd-in"; a `padding:X 0` shorthand here would silently reset
+   .wrap's horizontal padding to 0 and jam the logo into the corner. State all four sides. */
+.hd-in{display:flex;align-items:center;gap:24px;max-width:1280px;padding:14px 24px;}
+.hd-logo{display:flex;align-items:center;text-decoration:none;}
+.hd-logo img{height:40px;width:auto;display:block;}
+@media (max-width:560px){.hd-logo img{height:34px;}}
+.hd-nav{margin-left:auto;display:flex;gap:var(--sp-3);align-items:center;}
+.hd-nav a{color:var(--c-ink-dim);text-decoration:none;font-size:var(--fs-small);font-weight:600;}
+.hd-nav a:hover{color:var(--c-ink);}
+.hd-cta{background:var(--c-accent);text-decoration:none;font-weight:700;
+        font-size:var(--fs-small);padding:.6em 1.4em;border-radius:999px;}
+/* `.hd-nav a` (0,1,1) outranks `.hd-cta` (0,1,0), so the pill silently lost its white label
+   and inherited the nav ink — invisible while the nav ink was near-white, obvious now that it
+   is dark brown. journey.css hits the same collision and answers it with !important; matching
+   the selector weight instead keeps the cascade honest. */
+.hd-nav a.hd-cta,.hd-nav a.hd-cta:hover{color:#fff;}
+.hd-cta:hover{background:var(--c-accent-deep);}
+/* buttons */
+.btn{display:inline-block;text-decoration:none;font-weight:700;border-radius:999px;
+     padding:.9em 1.9em;font-size:var(--fs-small);transition:transform var(--m-fast) var(--m-ease),background var(--m-fast);}
+.btn-primary{background:var(--c-accent);color:#fff;box-shadow:var(--glow-ember);}
+.btn-primary:hover{background:var(--c-accent-deep);transform:translateY(-2px);}
+.btn-ghost{border:1.5px solid var(--c-line);color:var(--c-ink);}
+.btn-ghost:hover{border-color:var(--c-ink-dim);}
+/* destination.php has always asked for .btn-ink and never got it — the second button on every
+   guide page rendered as bare text with button padding. Solid ink reads 12.1:1 on paper and
+   gives the amber primary something to sit against. */
+.btn-ink{background:var(--c-ink);color:var(--c-stage);}
+.btn-ink:hover{background:#241d15;transform:translateY(-2px);}
+/* Buttons were two inline-blocks in a <p>, so the only thing between them was collapsible
+   whitespace — which disappears entirely once they wrap, leaving the pills touching.
+   A flex row keeps the gap in both directions. */
+.btn-row{display:flex;flex-wrap:wrap;gap:var(--sp-2);margin-top:var(--sp-3);}
+/* ── flat reading sections (both destinations pages share these) ── */
+.sec{padding:var(--sp-6) 0;position:relative;z-index:2;background:var(--c-stage);}
+.prose{max-width:var(--measure);color:var(--c-ink-dim);}
+.prose p+p{margin-top:var(--sp-2);}
+.chapter{display:grid;grid-template-columns:170px 1fr;gap:var(--sp-4);
+         padding:var(--sp-5) 0;border-top:1px solid var(--c-line);}
+.chapter:first-of-type{border-top:none;}
+.chapter-n{font-family:var(--f-display);color:var(--c-ember);font-size:var(--fs-h3);}
+.chapter-n small{display:block;font-family:var(--f-text);color:var(--c-ink-faint);font-size:var(--fs-tiny);
+  letter-spacing:var(--track-caps);text-transform:uppercase;margin-top:6px;}
+.chapter h3{font-family:var(--f-display);font-weight:600;font-size:var(--fs-h3);margin-bottom:var(--sp-2);color:var(--c-ink);}
+.fact-list{list-style:none;display:grid;gap:var(--sp-1);}
+.fact-list li{display:grid;grid-template-columns:160px 1fr;gap:var(--sp-2);padding:var(--sp-1) 0;
+  border-bottom:1px dashed var(--c-line);font-size:var(--fs-small);color:var(--c-ink-dim);}
+.fact-list b{color:var(--c-ink-faint);font-weight:600;}
+/* The hero is the one place the page is still a photograph. Two stacked gradients, topmost
+   listed first:
+     1. the plate dissolves into paper across its last ~84px, so there is no hard seam where
+        the picture meets the reading section;
+     2. a scrim that starts ABOVE that dissolve and only reaches as far up as the text needs —
+        the picture itself is left alone everywhere else.
+   Both are in px, not %, so the geometry does not drift with viewport height; the text block
+   is padded clear of the dissolve so it always sits on scrim, never on paper. */
+.dest-hero{position:relative;min-height:74vh;display:flex;align-items:flex-end;}
+.dest-hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.dest-hero::after{content:'';position:absolute;inset:0;background:
+  linear-gradient(to top,var(--c-stage) 0,var(--c-stage) 18px,rgba(244,236,218,0) 84px),
+  linear-gradient(to top,rgba(var(--c-scrim),.78) 18px,rgba(var(--c-scrim),.42) 46%,rgba(var(--c-scrim),0) 74%);}
+.dest-hero .wrap{position:relative;z-index:2;padding-bottom:96px;width:100%;}
+.dest-hero h1{font-family:var(--f-display);font-weight:600;font-size:var(--fs-mega);
+  line-height:var(--lh-tight);color:var(--c-onphoto);}
+.dest-hero .lead{color:var(--c-onphoto-dim);font-size:var(--fs-lead);margin-top:var(--sp-1);}
+.kicker{letter-spacing:var(--track-caps);text-transform:uppercase;font-size:var(--fs-tiny);
+        font-weight:700;color:var(--c-ember);}
+/* bright amber only ever appears on a photograph — on paper it fails contrast */
+.dest-hero .kicker{color:var(--c-amber-edge);}
+/* the credit sits in the dissolve, i.e. on paper, so it takes ink like a plate caption */
+.credit{position:absolute;right:var(--page-pad);bottom:4px;z-index:2;
+        font-size:var(--fs-tiny);color:var(--c-ink-faint);}
+/* footer */
+.ft{border-top:1px solid var(--c-line);padding:var(--sp-4) 0 var(--sp-5);
+    font-size:var(--fs-small);color:var(--c-ink-faint);position:relative;z-index:2;background:var(--c-stage);}
+.ft-in{display:flex;gap:var(--sp-3);flex-wrap:wrap;align-items:center;}
+.ft a{text-decoration:none;}
+.ft a:hover{color:var(--c-ember);}
+.ft .cr{margin-left:auto;}
+/* reveal (reading sections) — scoped to html.js so nothing hides without JS */
+.js .reveal{opacity:0;transform:translateY(var(--m-rise));
+        transition:opacity var(--m-slow) var(--m-ease),transform var(--m-slow) var(--m-ease);}
+.js .reveal.in{opacity:1;transform:none;}
+/* ── responsive: redesigned per breakpoint ── */
+@media (max-width:900px){
+  .chapter{grid-template-columns:1fr;gap:var(--sp-2);}
+  .hd-nav a:not(.hd-cta){display:none;}
+}
+@media (max-width:560px){
+  .fact-list li{grid-template-columns:1fr;gap:2px;}
+}
+/* ── reduced motion: everything readable up front, nothing moves ── */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  .js .reveal{opacity:1;transform:none;transition:none;}
+  .btn{transition:none;}
+}
+
+/* ── Destinations hub ──────────────────────────────────────────────────────────
+   Grouped by region rather than one alphabetical wall: forty entries in a single list is a
+   scroll, the same forty in six labelled groups is a glance. Cards carry the name and its
+   one-line description only — the page exists to route people onward, not to detain them. */
+.dl-main{padding-top:clamp(96px,14vw,140px);padding-bottom:clamp(40px,8vw,90px);}
+/* padding-top/bottom only — the shorthand would have reset .wrap's horizontal page padding and
+   pushed the cards flush to the screen edge. The top value clears the fixed header. */
+.dl-kicker{letter-spacing:.18em;text-transform:uppercase;font-size:11.5px;font-weight:700;
+  color:var(--c-amber,#CE8A31);margin-bottom:12px;}
+.dl-h1{font-family:'Fraunces',Georgia,serif;font-weight:600;line-height:1.1;
+  font-size:clamp(30px,5.5vw,52px);margin:0 0 12px;}
+.dl-sub{max-width:46ch;opacity:.72;line-height:1.6;margin:0 0 clamp(26px,4vw,44px);}
+.dl-sec{margin-bottom:clamp(26px,4vw,44px);}
+.dl-reg{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:clamp(17px,2.4vw,22px);
+  margin:0 0 14px;display:flex;align-items:baseline;gap:10px;}
+/* the opacities below are contrast floors, not taste: on paper .45 put this count at 2.6:1
+   and the card line at 3.8:1. Both now clear 4.5:1. */
+.dl-reg span{font-family:inherit;font-size:12px;font-weight:700;opacity:.7;}
+.dl-grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));}
+/* raised paper, not a translucent white film — on cream, rgba(255,255,255,.03) is invisible */
+.dl-card{display:flex;flex-direction:column;gap:3px;padding:15px 17px;text-decoration:none;
+  color:inherit;border:1px solid var(--c-line);border-radius:13px;
+  background:var(--c-stage-2);transition:border-color .2s,background .2s,transform .2s,box-shadow .2s;}
+.dl-card:hover{border-color:var(--c-amber);background:#fff;transform:translateY(-2px);
+  box-shadow:var(--shadow-soft);}
+.dl-name{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:17px;}
+.dl-line{font-size:13px;opacity:.7;line-height:1.45;}

@@ -1,0 +1,192 @@
+/* ── Tripo Saints · Journey Map Engine ──
+   One continuous illustrated India. The world lives in a fixed viewport behind the
+   page; scroll moves a virtual camera through stacked manuscript art. UI floats above
+   as paper. No JS → the world hides and the page reads as a clean ivory document. */
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --j-paper:#F4ECDA; --j-paper-2:#FBF6E9; --j-ink:#33291E; --j-ink-dim:rgba(51,41,30,.74);
+  --j-ink-faint:rgba(51,41,30,.5); --j-line:rgba(90,70,40,.2); --j-sepia:#7E4213;
+  --j-accent:#A94F1E; --j-accent-2:#D96B35;
+  --j-serif:'Fraunces',Georgia,serif;
+  --j-ease:cubic-bezier(.22,.68,.32,1);
+}
+html{scroll-behavior:smooth;}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--j-paper);
+     color:var(--j-ink);line-height:1.65;overflow-x:hidden;font-size:17px;}
+img{max-width:100%;display:block;}
+a{color:inherit;}
+:focus-visible{outline:none;box-shadow:0 0 0 3px var(--j-paper),0 0 0 6px var(--j-accent-2);border-radius:6px;}
+.skip{position:absolute;left:-9999px;top:0;background:var(--j-ink);color:var(--j-paper);
+      padding:8px 16px;z-index:300;border-radius:0 0 8px 0;font-weight:700;}
+.skip:focus{left:0;}
+
+/* ── paper grain over everything ── */
+.jgrain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.5;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .38 0 0 0 0 .28 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* ── the illustrated world (fixed, behind the page) ── */
+.jworld{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+  background:linear-gradient(180deg,#F6EFDF 0%,var(--j-paper) 30%);}
+.jw-strip{position:absolute;left:0;top:0;width:100%;height:100%;}
+/* The blend ramp is baked into each segment's alpha — no runtime mask.
+   Segments are one viewport WIDE (never scaled up to fill the height), so on a phone
+   they read as inset manuscript illustrations with paper around them rather than
+   full-bleed wallpaper. <picture> gives phones the small art deterministically. */
+.jw-seg{position:absolute;left:0;width:100%;height:auto;display:block;}
+.jw-seg img{width:100%;height:auto;display:block;}
+.jw-mon{position:absolute;display:block;}
+.jw-mon img{height:100%;width:auto;display:block;}
+.jw-flo{position:absolute;width:auto;}
+/* art outside the viewport is not painted or composited (set by journey.js) */
+.jw-strip .far{visibility:hidden;}
+.jw-flo.sway{transform-origin:50% 98%;animation:jsway 8s ease-in-out infinite alternate;}
+@keyframes jsway{from{transform:rotate(-.7deg);}to{transform:rotate(.9deg);}}
+
+/* ambient sky life — fixed to the viewport, independent of the camera */
+.jw-amb{position:absolute;inset:0;}
+.jw-cloud{position:absolute;opacity:.75;animation:jdrift 90s ease-in-out infinite alternate;}
+.jw-cloud.c2{animation-duration:120s;animation-delay:-40s;}
+.jw-cloud.c3{animation-duration:75s;animation-delay:-20s;}
+@keyframes jdrift{from{transform:translateX(-3vw);}to{transform:translateX(4vw);}}
+.jw-bird{position:absolute;opacity:0;animation:jglide 64s linear infinite;}
+.jw-bird.b2{animation-delay:-30s;animation-duration:80s;}
+@keyframes jglide{
+  0%{transform:translate(-8vw,30vh) scale(.7);opacity:0;}
+  6%{opacity:.5;}
+  48%{transform:translate(55vw,12vh) scale(.85);opacity:.5;}
+  94%{opacity:.4;}
+  100%{transform:translate(108vw,22vh) scale(.7);opacity:0;}}
+.jw-leaf{position:absolute;top:-8vh;opacity:0;animation:jfall 26s linear infinite;}
+.jw-leaf.l2{animation-delay:-9s;animation-duration:31s;}
+.jw-leaf.l3{animation-delay:-18s;animation-duration:22s;}
+@keyframes jfall{
+  0%{transform:translate(0,0) rotate(0);opacity:0;}
+  8%{opacity:.55;}
+  50%{transform:translate(-6vw,55vh) rotate(160deg);}
+  92%{opacity:.4;}
+  100%{transform:translate(3vw,112vh) rotate(320deg);opacity:0;}}
+
+/* ── floating header ── */
+.jhd{position:fixed;top:0;left:0;right:0;z-index:100;
+  background:linear-gradient(rgba(244,236,218,.94),rgba(244,236,218,0));}
+.jhd-in{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:24px;padding:14px 24px;}
+.jhd-logo img{height:40px;width:auto;display:block;}
+.jhd-nav{margin-left:auto;display:flex;gap:26px;align-items:center;}
+.jhd-nav a{color:var(--j-ink-dim);text-decoration:none;font-size:14.5px;font-weight:600;}
+.jhd-nav a:hover{color:var(--j-ink);}
+.jhd-cta{background:var(--j-accent-2);color:#fff !important;font-weight:700;
+  padding:.55em 1.35em;border-radius:999px;}
+.jhd-cta:hover{background:var(--j-accent);}
+
+/* ── the page: chapters floating over the world ── */
+.jmain{position:relative;z-index:10;}
+.jchap{min-height:132vh;display:grid;place-items:center;padding:16vh 24px;position:relative;}
+.jchap--hero{min-height:108vh;padding-top:26vh;}
+.jchap--hero .jbeat{padding:56px 48px;border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(244,236,218,.92) 34%,rgba(244,236,218,.55) 58%,rgba(244,236,218,0) 74%);}
+.jbeat{max-width:600px;text-align:center;}
+.jcard{background:rgba(251,246,233,.93);border:1px solid var(--j-line);border-radius:16px;
+  padding:clamp(26px,4.5vw,46px) clamp(22px,4vw,52px);
+  box-shadow:0 22px 48px rgba(70,48,14,.1),0 2px 8px rgba(70,48,14,.05);}
+.jkicker{letter-spacing:.18em;text-transform:uppercase;font-size:11.5px;font-weight:700;
+  color:var(--j-sepia);margin-bottom:14px;}
+.jbeat h1,.jbeat h2{font-family:var(--j-serif);font-weight:600;line-height:1.12;
+  font-size:clamp(30px,5vw,52px);margin-bottom:14px;letter-spacing:-.01em;}
+.jchap--hero h1{font-size:clamp(36px,6.2vw,64px);}
+.jbeat p{color:var(--j-ink-dim);font-size:clamp(16px,1.5vw,18.5px);max-width:52ch;margin:0 auto;}
+.jcta-row{display:flex;gap:14px;justify-content:center;margin-top:26px;flex-wrap:wrap;}
+.jbtn{display:inline-block;text-decoration:none;font-weight:700;border-radius:999px;
+  padding:.85em 1.8em;font-size:15px;transition:transform .25s var(--j-ease),background .25s;}
+.jbtn-primary{background:var(--j-accent-2);color:#fff;box-shadow:0 10px 24px rgba(217,107,53,.32);}
+.jbtn-primary:hover{background:var(--j-accent);transform:translateY(-2px);}
+.jbtn-ghost{border:1.5px solid var(--j-line);color:var(--j-ink);}
+.jbtn-ghost:hover{border-color:var(--j-ink-faint);}
+.jscroll-cue{margin-top:40px;color:var(--j-ink-faint);font-size:12px;letter-spacing:.22em;
+  text-transform:uppercase;animation:jcue 2.6s ease-in-out infinite;}
+@keyframes jcue{0%,100%{transform:translateY(0);opacity:.55;}50%{transform:translateY(7px);opacity:1;}}
+
+
+/* reveals — gated on .jrun (set only by journey.js itself), so content can never
+   be hidden unless the engine that reveals it is actually running */
+.jrun .jbeat,.jrun .jrun .jbeat.on{opacity:1;transform:none;}
+.jrun 
+/* ending + footer */
+.jcontinues{position:relative;z-index:10;text-align:center;color:var(--j-ink-faint);
+  letter-spacing:.26em;text-transform:uppercase;font-size:12px;padding:16vh 24px 10vh;}
+.jft{position:relative;z-index:10;border-top:1px solid var(--j-line);
+  padding:34px 0 44px;font-size:14px;color:var(--j-ink-faint);
+  background:linear-gradient(rgba(244,236,218,0),rgba(244,236,218,.9) 40%);}
+.jft-in{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;gap:26px;flex-wrap:wrap;align-items:center;}
+.jft a{text-decoration:none;}
+.jft a:hover{color:var(--j-sepia);}
+.jft .cr{margin-left:auto;}
+
+/* ── engine not running (no JS, or journey.js failed to load): the world folds
+   away and the manuscript still reads as a clean ivory document ── */
+html:not(.jrun) .jworld,html:not(.jrun) .jgrain{display:none;}
+html:not(.jrun) .jchap{min-height:0;padding:9vh 24px;}
+
+/* ── responsive ── */
+@media (min-width:901px){
+  /* the soft shadow under monuments is a per-frame GPU filter — desktop only */
+  .jw-mon{filter:drop-shadow(0 10px 18px rgba(70,50,20,.14));}
+}
+@media (max-width:900px){
+  .jhd-nav a:not(.jhd-cta){display:none;}
+  .jhd-logo img{height:34px;}
+  /* Chapters sit closer together on phones. The segment box here is max(100vw,94vh)
+     and the drawn art fills only part of that frame, so at 118vh the chapters were
+     spaced further apart than the artwork was tall and bare paper showed between
+     them. 96vh keeps every segment's art overlapping its neighbour. */
+  .jchap{min-height:96vh;}
+  .jchap--hero{min-height:100vh;padding-top:22vh;}
+  /* phones: drop the blend-mode grain and the extra animated layers — each one
+     costs a composite every frame and they are what makes scrolling stutter */
+  .jgrain{mix-blend-mode:normal;opacity:.32;}
+  .jw-bird,.jw-leaf{display:none;}
+  .jw-flo.sway{animation:none;}
+}
+@media (max-width:560px){
+  .jcard{padding:24px 20px;}
+  .jgrain{display:none;}
+  .jw-cloud.c3{display:none;}
+}
+
+/* ── reduced motion: the journey becomes a still storybook ── */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  .jrun .jbeat,.jrun   .jw-cloud,.jw-bird,.jw-leaf,.jw-flo.sway,.jscroll-cue{animation:none;}
+  .jw-bird,.jw-leaf{display:none;}
+}
+
+/* ── Podcast episodes ──────────────────────────────────────────────────────────
+   Built from the page's own palette rather than embedded, so the chapter keeps its
+   art direction and costs no third-party script, cookies or iframe. Each row is a
+   plain link out to Spotify. */
+.jpod{margin-top:30px;padding-top:24px;border-top:1px solid var(--j-line);}
+.jpod-k{letter-spacing:.18em;text-transform:uppercase;font-size:11.5px;font-weight:700;
+  color:var(--j-sepia);margin-bottom:6px;}
+.jpod-t{font-family:var(--j-serif);font-weight:600;color:var(--j-ink);
+  font-size:clamp(19px,2.4vw,24px);line-height:1.25;margin:0 0 14px;}
+.jpod-list{list-style:none;margin:0 0 16px;padding:0;}
+.jpod-list li+li{border-top:1px solid var(--j-line);}
+.jpod-ep{display:flex;align-items:center;gap:14px;padding:12px 4px;text-decoration:none;
+  color:inherit;border-radius:10px;transition:background .2s var(--j-ease);}
+.jpod-ep:hover{background:rgba(169,79,30,.05);}
+/* A drawn triangle rather than an icon font — nothing extra to download. */
+.jpod-play{flex:none;width:30px;height:30px;border-radius:50%;background:var(--j-accent-2);
+  position:relative;box-shadow:0 4px 12px rgba(217,107,53,.3);}
+.jpod-play::after{content:'';position:absolute;left:53%;top:50%;transform:translate(-50%,-50%);
+  border-style:solid;border-width:6px 0 6px 9px;border-color:transparent transparent transparent #fff;}
+.jpod-list{text-align:left;}   /* the chapter card centres its text; a list must not inherit that */
+.jpod-meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.jpod-meta b{font-family:var(--j-serif);font-weight:600;font-size:15.5px;color:var(--j-ink);line-height:1.3;}
+.jpod-note{font-size:13px;color:var(--j-ink-dim);line-height:1.4;}
+.jpod-len{flex:none;font-size:12.5px;color:var(--j-ink-faint);font-variant-numeric:tabular-nums;}
+.jpod-all{display:inline-block;font-size:13.5px;font-weight:700;color:var(--j-accent);
+  text-decoration:none;border-bottom:1px solid rgba(169,79,30,.3);padding-bottom:1px;}
+.jpod-all:hover{border-bottom-color:var(--j-accent);}
+@media (max-width:520px){
+  .jpod-len{display:none;}          /* the duration is the first thing worth losing when narrow */
+  .jpod-ep{gap:11px;padding:11px 2px;}
+}

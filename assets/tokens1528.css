@@ -1,0 +1,44 @@
+/* ── Tripo Saints design tokens · warm paper ──
+   Single source of truth for the destinations hub and the destination pages.
+   The ground is paper; India is amber; text is dark ink.
+
+   These values are lifted from journey.css's --j-* family on purpose, so the illustrated
+   home page and the guide pages read as one site. journey.css uses NONE of these tokens
+   (it is self-contained on --j-*), so editing this file cannot affect the home page. */
+:root{
+  /* paper */
+  --c-stage:#F4ECDA; --c-stage-2:#FBF6E9; --c-ink:#33291E; --c-ink-dim:rgba(51,41,30,.78);
+  /* .70, not the .38 a dark ground could afford: below that, 13.8px secondary text drops
+     under 4.5:1 on paper. Measured, not guessed. */
+  --c-ink-faint:rgba(51,41,30,.70); --c-line:rgba(90,70,40,.22);
+  /* the land — amber carries text now (kickers, chapter numerals), so it is the burnt tone
+     rather than the bright one: #A94F1E on paper is 4.67:1, #CE8A31 was 2.44:1. */
+  --c-amber:#A94F1E; --c-amber-deep:#7E4213; --c-amber-edge:#F2B76B; --c-ember:#A94F1E;
+  --c-accent:#D96B35; --c-accent-deep:#A94F1E;
+  /* the few surfaces that stay dark: the destination hero photograph and the header over it.
+     --c-amber-edge is the kicker there — bright amber only ever appears on a photo. */
+  --c-onphoto:#FBF6E9; --c-onphoto-dim:rgba(251,246,233,.86); --c-scrim:26,18,8;
+  /* paper (destination reading sections) */
+  --c-paper:#FBF6E9; --c-paper-2:#EFE5CE;
+  /* type */
+  --f-display:'Fraunces',Georgia,serif;
+  --f-text:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --fs-mega:clamp(2.6rem,7.5vw,5.4rem); --fs-beat:clamp(1.9rem,4.6vw,3.4rem);
+  --fs-h3:clamp(1.2rem,2.2vw,1.55rem); --fs-lead:clamp(1.02rem,1.5vw,1.2rem);
+  --fs-body:1.02rem; --fs-small:.86rem; --fs-tiny:.72rem;
+  --lh-tight:1.06; --lh-text:1.75; --track-caps:.24em;
+  /* space */
+  --sp-1:.5rem; --sp-2:1rem; --sp-3:1.75rem; --sp-4:2.75rem; --sp-5:4.5rem; --sp-6:7rem;
+  --measure:60ch; --measure-narrow:42ch; --page-max:1180px; --page-pad:clamp(20px,4vw,44px);
+  /* radius + shadow + glow */
+  --r-s:10px; --r-m:18px; --r-l:26px;
+  /* On paper a shadow is a shadow, not a glow: warm-brown and shallow. The old 80px black
+     bloom read as smoke against cream. */
+  --shadow-soft:0 18px 44px -22px rgba(74,52,20,.42);
+  --glow-ember:0 8px 18px -8px rgba(169,79,30,.42);
+  /* motion */
+  --m-fast:.35s; --m-slow:.9s; --m-ease:cubic-bezier(.22,.68,.32,1); --m-rise:26px;
+  /* focus */
+  /* paper halo first so the ring reads on top of cards and photos alike */
+  --focus-ring:0 0 0 3px var(--c-stage),0 0 0 6px var(--c-accent-deep);
+}
